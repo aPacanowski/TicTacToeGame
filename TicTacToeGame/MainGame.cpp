@@ -22,8 +22,7 @@ MainGame::~MainGame()
 
 void MainGame::printBoard() {
 	system("cls");
-	cout << "\n\n\tTic Tac Toe\n\n";
-
+	cout << "\n\n\tTic Tac Toe" << endl; 
 	cout << "Player 1 (X)  -  Computer (O)" << endl << endl;
 	cout << endl;
 
@@ -36,17 +35,19 @@ void MainGame::printBoard() {
 	}
 }
 
-bool MainGame::isRemis() {
-	int CounterNoneFileds = 0;
-	if (!verifyPalyerWin(Player::human) && !verifyPalyerWin(Player::computer)) {
+bool MainGame::isDraw() {
+	int CounterEmptyFileds = 0;
+	if (verifyPalyerWin(Player::human) || verifyPalyerWin(Player::computer)) {
+		return false;
+	}
+	else {
 		for (int i = 0; i < 9; i++) {
 			if (board[i] == Player::none)
-				CounterNoneFileds++;
+				CounterEmptyFileds++;
 		}
-		return (CounterNoneFileds > 0) ? false : true;
-		//(CounterNoneFileds > 0) ? return false : return true
+		return (CounterEmptyFileds > 0) ? false : true;
 	}
-	return false;
+
 }
 
 bool MainGame::verifyPalyerWin(Player player) {
@@ -83,10 +84,13 @@ void MainGame::getHumanMove() {
 		cout << "Make Move! : ";
 		cin >> move;
 		if (isdigit(move)) {
-			choosenField = move - '0';
+			choosenField = move - 48;
 			if ((choosenField <= 9 && choosenField >= 1) && board[choosenField-1] == Player::none) {
-				cout << "wrong number! No field with this number or spot is taken";
 				wrongMove = false;
+			}
+			else {
+				cout << "wrong number! No field with this number or spot is taken";
+				wrongMove = true;
 			}
 		}
 		else {
@@ -103,8 +107,6 @@ void MainGame::play() {
 	bool turn = 0;
 	bool exit = false;
 	std::string winner = "";
-	srand(time(NULL));
-	int losowaliczba;
 	printBoard();
 
 	do {
@@ -121,14 +123,6 @@ void MainGame::play() {
 
 			int bestMove = getBestPossibleMove();
 			board[bestMove] = Player::computer;
-			/*bool ok = false;
-			do {
-				losowaliczba = (std::rand() % 8) ;
-				if (board[losowaliczba] == Player::none) {
-					board[losowaliczba] = Player::computer;
-					ok = true;
-				}
-			} while (!ok);*/
 
 			if (verifyPalyerWin(Player::computer)) {
 				winner = "Computer";
@@ -137,11 +131,12 @@ void MainGame::play() {
 			turn = 0;
 		}
 
-		if (isRemis()) {
-			winner = "no one, its just a remis";
+		if (isDraw()) {
+			winner = "no one, its just a draw";
 			exit = true;
 		}
 		printBoard();
+
 		if (winner.length() > 2)
 		{
 			cout << "THE WINNER IS : " << winner;
@@ -176,7 +171,7 @@ int MainGame::getBestPossibleMove()
 int MainGame::maxSearch(int level) {
 	if (verifyPalyerWin(Player::human)) { return 10; }
 	else if (verifyPalyerWin(Player::computer)) { return -10; }
-	else if (isRemis()) { return 0; }
+	else if (isDraw()) { return 0; }
 
 	int score = std::numeric_limits<int>::min();
 	for (int i = 0; i < 9; i++) {
@@ -192,7 +187,7 @@ int MainGame::maxSearch(int level) {
 int MainGame::minSearch(int level) {
 	if (verifyPalyerWin(Player::human)) { return 10; }
 	else if (verifyPalyerWin(Player::computer)) { return -10; }
-	else if (isRemis()) { return 0; }
+	else if (isDraw()) { return 0; }
 
 	int score = std::numeric_limits<int>::max();
 
