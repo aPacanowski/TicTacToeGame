@@ -40,13 +40,12 @@ bool MainGame::isDraw() {
 	if (verifyPalyerWin(Player::human) || verifyPalyerWin(Player::computer)) {
 		return false;
 	}
-	else {
-		for (int i = 0; i < 9; i++) {
-			if (board[i] == Player::none)
-				CounterEmptyFileds++;
-		}
-		return (CounterEmptyFileds > 0) ? false : true;
+
+	for (int i = 0; i < 9; i++) {
+		if (board[i] == Player::none)
+			CounterEmptyFileds++;
 	}
+	return (CounterEmptyFileds > 0) ? false : true;
 
 }
 
@@ -78,14 +77,16 @@ bool MainGame::verifyPalyerWin(Player player) {
 void MainGame::getHumanMove() {
 	int choosenField = -1;
 	bool wrongMove = true;
+	int boardIndexPosition;
 	char move;
 	//get field number and verify that move is possible
 	do {
 		cout << "Make Move! : ";
 		cin >> move;
 		if (isdigit(move)) {
-			choosenField = move - 48;
-			if ((choosenField <= 9 && choosenField >= 1) && board[choosenField-1] == Player::none) {
+			choosenField = move - '0';
+			boardIndexPosition = choosenField - 1; ////minus 1 because of iteration from 0;
+			if (choosenField <= 9 && choosenField >= 1 && board[boardIndexPosition] == Player::none) {
 				wrongMove = false;
 			}
 			else {
@@ -100,20 +101,20 @@ void MainGame::getHumanMove() {
 		cout << endl;
 	} while (wrongMove);
 
-	board[choosenField-1] = Player::human; //minus 1 because of iteration from 0;
+	board[boardIndexPosition] = Player::human;
 }
 
 void MainGame::play() {
-	bool turn = 0;
+	bool isItHumanPlayerTurn = 1;
 	bool exit = false;
 	std::string winner = "";
 	printBoard();
 
 	do {
 
-		if (turn == 0) {
+		if (isItHumanPlayerTurn) {
 			getHumanMove();
-			turn = 1;
+			isItHumanPlayerTurn = 0;
 			if (verifyPalyerWin(Player::human)) {
 				winner = "Human";
 				exit = true;
@@ -128,7 +129,7 @@ void MainGame::play() {
 				winner = "Computer";
 				exit = true;
 			}
-			turn = 0;
+			isItHumanPlayerTurn = 1;
 		}
 
 		if (isDraw()) {
