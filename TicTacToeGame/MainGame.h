@@ -8,12 +8,6 @@ class MainGame
 		computer = 'O'
 	};
 
-	struct Move {
-		unsigned gameField;
-		bool turn; //which player's turn 0: human, 1: computer
-		int score;
-	};
-
 	Player board[9];
 
 public:
@@ -25,7 +19,7 @@ public:
 	void printBoard();
 
 	/*Verify that there is no empty fields, and there is no winner*/
-	bool isRemis();
+	bool isDraw();
 
 	/*Verify the winner exists on current board*/
 	bool verifyPalyerWin(Player player);
@@ -36,10 +30,15 @@ public:
 	/*Main method which looping wole game algorithms, and quit when the game is over*/
 	void play();
 
-	int getBestPossibleMove(Player boardm, Player & player);
+	/*				  
+	 *MinMax algorithm
+	 */
 
-	/*For MinMax algorithm*/
+	/*Check the best move, and return the number of field (0-8)*/
 	int getBestPossibleMove();
+
+	/*Recursive functions, which calculate best score, maxSearch() callcualte best possible computer move,
+	the minSearch() callculate best possible way to prevent human's win. Both return best score*/
 	int maxSearch(int level);
 	int minSearch(int level);
 
