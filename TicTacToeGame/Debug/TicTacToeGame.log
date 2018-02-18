@@ -1,0 +1,7 @@
+﻿  MainGame.cpp
+c:\users\adrian\source\repos\tictactoegame\tictactoegame\maingame.cpp(106): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\adrian\source\repos\tictactoegame\tictactoegame\maingame.cpp(107): warning C4101: 'losowaliczba': unreferenced local variable
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  TicTacToeGame.cpp
+  TicTacToeGame.vcxproj -> C:\Users\Adrian\source\repos\TicTacToeGame\Debug\TicTacToeGame.exe
