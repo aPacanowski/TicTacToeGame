@@ -30,6 +30,7 @@ public:
 	/*Main method which looping wole game algorithms, and quit when the game is over*/
 	void play();
 
+	int getFieldIfNearWin(Player player);
 	/*				  
 	 *MinMax algorithm
 	 */

@@ -121,9 +121,12 @@ void MainGame::play() {
 			}
 		}
 		else { //computer turn
+			int bestMove = getFieldIfNearWin(Player::human);
+			//int bestMove = getBestPossibleMove();
+			if (bestMove != -1) {
+				board[bestMove] = Player::computer;
+			}
 
-			int bestMove = getBestPossibleMove();
-			board[bestMove] = Player::computer;
 
 			if (verifyPalyerWin(Player::computer)) {
 				winner = "Computer";
@@ -145,6 +148,38 @@ void MainGame::play() {
 	} while (!exit);
 }
 
+int MainGame::getFieldIfNearWin(Player player) {
+	Player opossitePlayer;
+	int savedField = -1;
+	if (player == Player::human) { 
+		opossitePlayer = Player::computer; 
+	} else {
+		opossitePlayer = Player::human;
+	}
+	int counter=0;
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = i; j < 9; j = j + 3) {
+			if (board[j] == player) {
+				counter++;
+			}
+			else if (board[j] == opossitePlayer) {
+				counter--;
+			}
+			else if (board[j] == Player::none) {
+				savedField = j;
+			}
+		}
+		if (counter == 2) {
+			return savedField;
+		}
+
+		savedField = -1;
+		counter = 0;
+	}
+
+	return savedField;
+}
 
 int MainGame::getBestPossibleMove()
 {
