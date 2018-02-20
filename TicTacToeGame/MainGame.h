@@ -15,6 +15,10 @@ public:
 	MainGame();
 	~MainGame();
 
+	/*Main method which looping wole game algorithms, and quit when the game is over*/
+	void play();
+
+private:
 	/*Print game board into the console, with current board*/
 	void printBoard();
 
@@ -27,9 +31,10 @@ public:
 	/*Get char from console, and verify the value is correct, after that save move into game board*/
 	void getHumanMove();
 
-	/*Main method which looping wole game algorithms, and quit when the game is over*/
-	void play();
+	/*Get best possible move for computer, and set it on board*/
+	void setComputerMove();
 
+	/*Method which return free filed number, only when last filed left for win*/
 	int getFieldIfNearWin(Player player);
 	/*				  
 	 *MinMax algorithm

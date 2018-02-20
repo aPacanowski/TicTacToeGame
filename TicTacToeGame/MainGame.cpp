@@ -104,6 +104,22 @@ void MainGame::getHumanMove() {
 	board[boardIndexPosition] = Player::human;
 }
 
+void MainGame::setComputerMove() {
+	int bestMoveComputer = getFieldIfNearWin(Player::computer);
+	int bestMoveHuman = getFieldIfNearWin(Player::human);
+
+	if (bestMoveComputer != -1) {
+		board[bestMoveComputer] = Player::computer;
+	}
+	else if (bestMoveHuman != -1) {
+		board[bestMoveHuman] = Player::computer;
+	}
+	else {
+		bestMoveComputer = getBestPossibleMove();
+		board[bestMoveComputer] = Player::computer;
+	}
+
+}
 void MainGame::play() {
 	bool isItHumanPlayerTurn = 1;
 	bool exit = false;
@@ -121,12 +137,7 @@ void MainGame::play() {
 			}
 		}
 		else { //computer turn
-			int bestMove = getFieldIfNearWin(Player::human);
-			//int bestMove = getBestPossibleMove();
-			if (bestMove != -1) {
-				board[bestMove] = Player::computer;
-			}
-
+			setComputerMove();
 
 			if (verifyPalyerWin(Player::computer)) {
 				winner = "Computer";
@@ -151,33 +162,77 @@ void MainGame::play() {
 int MainGame::getFieldIfNearWin(Player player) {
 	Player opossitePlayer;
 	int savedField = -1;
+	int counter = 0;
+
 	if (player == Player::human) { 
 		opossitePlayer = Player::computer; 
 	} else {
 		opossitePlayer = Player::human;
 	}
-	int counter=0;
 
+	//verify vertical
 	for (int i = 0; i < 3; i++) {
-		for (int j = i; j < 9; j = j + 3) {
+		for (int j = i; j < 9; j += 3) {
 			if (board[j] == player) {
 				counter++;
+			}else if (board[j] == Player::none) {
+				savedField = j;
 			}
-			else if (board[j] == opossitePlayer) {
-				counter--;
+		}
+		if (counter == 2 && board[savedField]==Player::none) {
+			return savedField;
+		}
+		savedField = -1;
+		counter = 0;
+	}
+
+	//verify horizontal
+	for (int i = 0; i < 9; i += 3) {
+		for (int j = i; j < i + 3; j++) {
+			if (board[j] == player) {
+				counter++;
 			}
 			else if (board[j] == Player::none) {
 				savedField = j;
 			}
 		}
-		if (counter == 2) {
+		if (counter == 2 && board[savedField] == Player::none) {
 			return savedField;
 		}
-
 		savedField = -1;
 		counter = 0;
 	}
 
+	//verify first cross
+	for (int i = 0; i <= 8; i += 4) {
+		if (board[i] == player) {
+			counter++;
+		}
+		else if (board[i] == Player::none) {
+			savedField = i;
+		}
+	}
+	if (counter == 2 && board[savedField] == Player::none) {
+		return savedField;
+	}
+
+	//verify second cross
+	savedField = -1;
+	counter = 0;
+	for (int i = 2; i <= 6 ; i += 2) {
+		if (board[i] == player) {
+			counter++;
+		}
+		else if (board[i] == Player::none) {
+			savedField = i;
+		}
+	}
+	if (counter == 2 && board[savedField] == Player::none) {
+		return savedField;
+	}
+
+	savedField = -1;
+	counter = 0;
 	return savedField;
 }
 
